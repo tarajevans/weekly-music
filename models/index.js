@@ -1,37 +1,24 @@
 const User = require('./User');
 const Post = require("./Post");
-module.exports = { User, Post };
+const Comment = require("./Comments");
+const Image = require("./image.model")
+module.exports = { User, Post, Comment,Image};
 
 // create associations
-User.hasMany(Post, {
-    foreignKey: 'user_id'
-  });
+User.belongsToMany(Post, {
+  through: Comment,
+  as: 'comment_posts',
+  foreignKey: 'user_id'
+});
 
-  Post.belongsTo(User, {
-    foreignKey: 'user_id',
-  });
+Post.belongsToMany(User, {
+  through: Comment,
+  as: 'comment_posts',
+  foreignKey: 'post_id'
+});
 
-// const User = require('./User');
-// const Post = require('./Post');
-// const Comment = require('./Comment');
-
-// Post.belongsTo(User, {
-//     foreignKey: 'userId',
-//     onDelete: 'CASCADE'
-// });
-
-// Post.hasMany(Comment, {
-//     foreignKey: 'postId',
-//     onDelete: 'CASCADE'
-// });
-
-// Comment.belongsTo(User, {
-//     foreignKey: 'userId',
-//     onDelete: 'CASCADE'
-// });
-
-// module.exports = {
-//     User,
-//     Comment,
-//     Post
-// };
+User.hasOne(Image,{
+  through: Image,
+  as: 'profile_image',
+  foreignKey: 'user_id'
+})
